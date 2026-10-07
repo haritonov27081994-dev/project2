@@ -5,7 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Магазин БАДов</title>
 </head>
-<body>
-  <h1>Главная страница</h1>
+<body style="font-family: Arial, sans-serif; padding: 20px; background-color: #fafafa; color: #333;">
+  <h1>Каталог товаров (БАДы)</h1>
+
+  {% if products %}
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+      {% for product in products %}
+        <div style="border: 1px solid #ddd; padding: 20px; border-radius: 12px; width: 240px; background-color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <h2 style="margin-top: 0; color: #2c3e50; font-size: 1.4em;">{{ product.title }}</h2>
+            <p style="color: #7f8c8d; font-size: 0.95em; line-height: 1.4; min-height: 60px;">{{ product.description }}</p>
+          </div>
+          <div style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: bold; color: #27ae60; font-size: 1.25em;">{{ product.price }} ₽</span>
+            <button style="background-color: #27ae60; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold;">В корзину</button>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p style="color: #7f8c8d; font-size: 1.1em;">В магазине пока нет товаров. Загляните позже или добавьте их через админку!</p>
+  {% endif %}
 </body>
 </html>
