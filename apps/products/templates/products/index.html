@@ -1,20 +1,13 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>iБАД | Главная</title>
-</head>
-<body>
-  <header style="background-color: #f5f5f5; padding: 10px; margin-bottom: 20px;">
-    <nav>
-      <!-- Используем namespace 'products' и имя маршрута 'home' / 'product_list' -->
-      <a href="{% url 'products:home' %}" style="margin-right: 15px;">Главная</a>
-      <a href="{% url 'products:product_list' %}">Каталог БАДов</a>
-    </nav>
-  </header>
+{% extends "products/base.html" %}
 
+{% block page_title %}
+  iБАД | Главная страница
+{% endblock page_title %}
+
+{% block page_content %}
   <h1>Добро пожаловать в интернет-магазин БАДов!</h1>
-  <p>Здесь вы найдете лучшие витамины и добавки для вашего здоровья.</p>
-</body>
-</html>
+  <p>Мы заботимся о вашем здоровье. Выберите качественные витамины и добавки в нашем удобном каталоге.</p>
+  <a href="{% url 'products:product_list' %}" style="display: inline-block; background-color: #2e7d32; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 10px; font-weight: bold;">
+    Перейти к покупкам &rarr;
+  </a>
+{% endblock page_content %}

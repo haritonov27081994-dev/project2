@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Блок для динамической замены заголовка вкладки -->
+  <title>{% block page_title %}{% endblock page_title %}</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 0;">
+
+  <!-- Общая шапка интернет-магазина для всех страниц -->
+  <header style="background-color: #2e7d32; padding: 15px 20px; color: white;">
+    <nav style="display: flex; gap: 20px; align-items: center;">
+      <strong style="font-size: 20px; margin-right: 20px;">iБАД</strong>
+      <a href="{% url 'products:home' %}" style="color: white; text-decoration: none; font-weight: bold;">Главная</a>
+      <a href="{% url 'products:product_list' %}" style="color: white; text-decoration: none; font-weight: bold;">Каталог БАДов</a>
+    </nav>
+  </header>
+
+  <!-- Сюда подставится уникальный контент каждой страницы -->
+  <main style="padding: 20px;">
+    {% block page_content %}{% endblock page_content %}
+  </main>
+
+  <footer style="background-color: #f5f5f5; text-align: center; padding: 15px; margin-top: 40px; color: #666;">
+    <p>&copy; 2026 iБАД — Интернет-магазин биологически активных добавок.</p>
+  </footer>
+
+</body>
+</html>
