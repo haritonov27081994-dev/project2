@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -5,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Блок для динамической замены заголовка вкладки -->
   <title>{% block page_title %}{% endblock page_title %}</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body style="font-family: Arial, sans-serif; margin: 0; padding: 0;">
 
