@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iБАД | Каталог товаров</title>
+</head>
+<body>
+  <header style="background-color: #f5f5f5; padding: 10px; margin-bottom: 20px;">
+    <nav>
+      <a href="{% url 'products:home' %}" style="margin-right: 15px;">Главная</a>
+      <a href="{% url 'products:product_list' %}">Каталог БАДов</a>
+    </nav>
+  </header>
+
+  <h1>Каталог биологически активных добавок</h1>
+
+  {% if products %}
+    <div class="catalog-container" style="display: flex; flex-wrap: wrap; gap: 20px;">
+    {% for product in products %}
+      <div class="product-card" style="background-color: #2e7d32; color: white; border: 1px solid #1b5e20; border-radius: 8px; padding: 15px; width: 250px;">
+        <h2>{{ product.name }}</h2>
+        <p><strong>Производитель:</strong> {{ product.brand }}</p>
+        <p><strong>Описание:</strong> {{ product.description }}</p>
+        <div style="background-color: #ffffff; color: #2e7d32; padding: 5px; font-weight: bold; text-align: center; border-radius: 4px;">
+          Цена: {{ product.price }} руб.
+        </div>
+      </div>
+    {% endfor %}
+    </div>
+  {% else %}
+    <p>Товаров пока нет в наличии. Загляните позже!</p>
+  {% endif %}
+</body>
+</html>
