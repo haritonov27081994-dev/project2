@@ -19,5 +19,6 @@ from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('products.urls')),
+    # Подключаем маршруты приложения товаров для главной страницы
+    path('', include('apps.products.urls')), 
 ]

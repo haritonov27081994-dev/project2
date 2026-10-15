@@ -1,7 +1,5 @@
 from django.shortcuts import render
-from .models import Product
-
+from django.http import HttpResponse
 
 def home_page_view(request):
-    products = Product.objects.all()
-    return render(request, template_name='products/index.html', context={'products': products})
+    return HttpResponse("<h1>Главная страница интернет-магазина БАДов</h1>")
