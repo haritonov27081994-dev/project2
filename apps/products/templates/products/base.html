@@ -4,28 +4,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Блок для динамической замены заголовка вкладки -->
+  <!-- Блок для динамической замены заголовка вкладки на разных страницах -->
   <title>{% block page_title %}{% endblock page_title %}</title>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  
   <link rel="icon" href="{% static 'images/favicon.png' %}">
+  
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-<body style="font-family: Arial, sans-serif; margin: 0; padding: 0;">
+<body style="margin: 0; padding: 0;">
 
-  <!-- Общая шапка интернет-магазина для всех страниц -->
+  <!-- Общая шапка интернет-магазина -->
   <header style="background-color: #2e7d32; padding: 15px 20px; color: white;">
     <nav style="display: flex; gap: 20px; align-items: center;">
       <strong style="font-size: 20px; margin-right: 20px;">iБАД</strong>
       <a href="{% url 'products:home' %}" style="color: white; text-decoration: none; font-weight: bold;">Главная</a>
       <a href="{% url 'products:product_list' %}" style="color: white; text-decoration: none; font-weight: bold;">Каталог БАДов</a>
+      
+      {% if user.is_authenticated and user.is_staff %}
+        <a href="{% url 'products:product_add' %}" style="color: #a5d6a7; text-decoration: none; font-weight: bold; border: 1px solid #a5d6a7; padding: 5px 10px; border-radius: 4px;">+ Добавить товар</a>
+      {% endif %}
     </nav>
   </header>
 
-  <!-- Сюда подставится уникальный контент каждой страницы -->
+
   <main style="padding: 20px;">
     {% block page_content %}{% endblock page_content %}
   </main>
 
-  <footer style="background-color: #f5f5f5; text-align: center; padding: 15px; margin-top: 40px; color: #666;">
+  <footer style="background-color: #f5f5f5; text-align: center; padding: 15px; margin-top: 40px; color: #666; border-top: 1px solid #e0e0e0;">
     <p>&copy; 2026 iБАД — Интернет-магазин биологически активных добавок.</p>
   </footer>
 
