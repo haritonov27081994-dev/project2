@@ -1,11 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from .models import Product
 
 def home_page_view(request):
     return render(request, template_name='products/index.html')
 
 def product_list_view(request):
-    products = [
-        {"name": "Омега-3 Высокая концентрация", "brand": "Solgar", "description": "Для сердца и сосудов, 60 капсул", "price": 1800},
-        {"name": "Витамин D3 5000 ME", "brand": "Now Foods", "description": "Для иммунитета и костей, 120 капсул", "price": 950},
-    ]
+
+    products = Product.objects.all() 
     return render(request, template_name='products/product_list.html', context={'products': products})
+
+def product_detail_view(request, product_id):
+
+    product = get_object_or_404(Product, id=product_id)
+    return render(request, 'products/product_detail.html', {'product': product})

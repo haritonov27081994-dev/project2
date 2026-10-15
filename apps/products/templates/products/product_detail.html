@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iБАД | {{ product.title }}</title>
+</head>
+<body>
+  <!-- Шапка сайта с навигацией -->
+  <header style="background-color: #f5f5f5; padding: 10px; margin-bottom: 20px;">
+    <nav>
+      <a href="{% url 'products:home' %}" style="margin-right: 15px;">Главная</a>
+      <a href="{% url 'products:product_list' %}">Каталог БАДов</a>
+    </nav>
+  </header>
+
+  <!-- Кнопка возврата назад -->
+  <a href="javascript:history.back()" style="color: #2e7d32; text-decoration: none;">&larr; Назад к каталогу</a>
+
+  <!-- Карточка конкретного БАДа -->
+  <div style="border: 2px solid #2e7d32; border-radius: 12px; padding: 25px; margin-top: 20px; max-width: 600px;">
+    <!-- Выводим реальные поля вашей модели Product -->
+    <h1>{{ product.title }}</h1>
+    <p><strong>ID товара:</strong> {{ product.id }}</p>
+    <p><strong>Описание и состав:</strong> {{ product.description }}</p>
+    <p><small>Добавлен в магазин: {{ product.created_at }}</small></p>
+    
+    <div style="font-size: 24px; color: #2e7d32; font-weight: bold; margin-top: 15px;">
+      Цена: {{ product.price }} руб.
+    </div>
+    
+    <button style="background-color: #2e7d32; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 15px; font-weight: bold;">
+      Добавить в корзину
+    </button>
+  </div>
+</body>
+</html>
