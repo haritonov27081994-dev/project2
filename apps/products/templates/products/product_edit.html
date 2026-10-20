@@ -1,0 +1,46 @@
+{% extends "products/base.html" %}
+
+{% block page_title %}
+  iБАД | Редактировать товар
+{% endblock page_title %}
+
+{% block page_content %}
+  <a href="{% url 'products:product_detail' product_id=form.instance.id %}" style="color: #2e7d32; text-decoration: none; font-weight: bold;">&larr; Назад к товару</a>
+
+  <div style="max-width: 500px; margin-top: 20px; border: 1px solid #e0e0e0; padding: 25px; border-radius: 8px; background-color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+    <h1 style="color: #2e7d32; margin-bottom: 20px; font-size: 24px;">Редактирование БАДа</h1>
+    
+    <form method="POST" novalidate>
+      {% csrf_token %}
+      
+      {% for field in form %}
+        <div style="margin-bottom: 15px;">
+          <label for="{{ field.id_for_label }}" style="display: block; font-weight: bold; margin-bottom: 5px;">
+            {{ field.label }}:
+          </label>
+          {{ field }}
+          {% if field.errors %}
+            <div style="color: #c62828; font-size: 12px; margin-top: 5px;">
+              ⚠️ {{ field.errors.0 }}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      
+      <button type="submit" style="background-color: #2e7d32; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px;">
+        Сохранить изменения
+      </button>
+    </form>
+  </div>
+
+  <style>
+    form input[type="text"], form input[type="number"], form textarea {
+      width: 100%; 
+      padding: 8px; 
+      border: 1px solid #ccc; 
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+  </style>
+{% endblock page_content %}

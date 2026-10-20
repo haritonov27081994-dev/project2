@@ -23,7 +23,7 @@ def product_add_view(request):
     # Если отправлена форма, передаем в нее данные из POST
     if request.method == "POST":
         form = ProductForm(request.POST)
-        if form.is_valid():  # Django автоматически запускает все проверки из формы!
+        if form.is_valid():  # Django автоматически запускает все проверки из формы
             new_product = form.save()  # Автоматически создает товар в БД
             return redirect('products:product_detail', product_id=new_product.id)
     else:
@@ -32,3 +32,26 @@ def product_add_view(request):
 
     # Передаем форму в шаблон (при ошибках форма вернется с заполненными полями и текстом ошибок)
     return render(request, 'products/product_add.html', {'form': form})
+
+
+# НОВЫЙ защищенный контроллер редактирования товара на базе ModelForm с урока
+def product_edit_view(request, product_id):
+    # Проверяем безопасность: редактировать каталог могут только администраторы
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return HttpResponseForbidden("<h1>Доступ запрещен</h1><p>Только администраторы могут редактировать товары.</p>")
+
+    # Получаем существующий БАД из базы данных или отдаем ошибку 404
+    product = get_object_or_404(Product, id=product_id)
+
+    if request.method == "POST":
+        # Передаем измененные данные из POST и связываем их с редактируемым БАДом через instance
+        form = ProductForm(request.POST, instance=product)
+        if form.is_valid():
+            form.save()  # Django обновит текущую запись в базе данных (выполнит SQL UPDATE)
+            return redirect("products:product_detail", product_id=product.id)
+        # Если в форме допущены ошибки — возвращаем страницу редактирования со списком ошибок
+        return render(request, 'products/product_edit.html', context={"form": form})
+
+    # При GET-запросе создаем форму, автоматически предзаполненную текущими данными этого БАДа
+    form = ProductForm(instance=product)
+    return render(request, 'products/product_edit.html', context={"form": form})
