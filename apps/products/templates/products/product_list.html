@@ -21,8 +21,16 @@
           <p style="color: #555;"><strong>Описание:</strong> {{ product.description|truncatewords:10 }}</p>
         </div>
 
-        <div style="background-color: #2e7d32; color: white; padding: 8px; font-weight: bold; text-align: center; border-radius: 4px; margin-top: 10px;">
-          Цена: {{ product.price }} руб.
+        <div>
+          <div style="background-color: #2e7d32; color: white; padding: 8px; font-weight: bold; text-align: center; border-radius: 4px; margin-top: 10px;">
+            Цена: {{ product.price }} руб.
+          </div>
+          
+          {% if user.is_staff %}
+            <div style="color: #c62828; font-size: 11px; text-align: center; margin-top: 8px; background-color: #ffebee; padding: 4px; border-radius: 4px;">
+              ⚙️ Админ: {{ product.created_at|date:"d.m.Y" }}
+            </div>
+          {% endif %}
         </div>
 
       </div>
