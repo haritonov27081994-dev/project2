@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseForbidden  
-from django.views.decorators.http import require_POST  # Импортируем декоратор из урока
 from .models import Product
 from .forms import ProductForm 
 
@@ -59,16 +58,18 @@ def product_edit_view(request, product_id):
 
     return render(request, 'products/product_form.html', context={"form": form, **extra_context})
 
-# НОВЫЙ защищенный контроллер удаления товара с декоратором require_POST
-@require_POST
+# Обновленный двухэтапный контроллер удаления товара из урока (без require_POST)
 def product_remove_view(request, product_id):
-    # Двойная защита: даже если POST-запрос отправлен в обход интерфейса, проверяем права
+    # Защита доступа: удалять товары могут только администраторы
     if not request.user.is_authenticated or not request.user.is_staff:
         return HttpResponseForbidden("<h1>Доступ запрещен</h1><p>Только администраторы могут удалять товары.</p>")
         
-    # Находим БАД и удаляем его из базы данных
     product = get_object_or_404(Product, id=product_id)
-    product.delete()
     
-    # После успешного удаления перенаправляем админа на общий каталог товаров
-    return redirect("products:product_list")
+    # Если админ нажал кнопку подтверждения удаления (отправил POST)
+    if request.method == "POST":
+        product.delete()
+        return redirect("products:product_list")
+        
+    # Если админ только нажал ссылку "Удалить" (отправил GET) — показываем страницу подтверждения
+    return render(request, 'products/product_remove_confirm.html', {'product': product})

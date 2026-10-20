@@ -11,7 +11,7 @@
     <h1 style="color: #2e7d32; margin-top: 0;">{{ product.title }}</h1>
     <p style="color: #777;"><strong>ID товара:</strong> {{ product.id }}</p>
     <p><strong>Описание и состав:</strong> {{ product.description }}</p>
-    {% if user.is_staff %}
+{% if user.is_staff %}
       <div style="background-color: #ffebee; padding: 12px; border-radius: 6px; margin-top: 10px;">
         <p style="color: #c62828; font-size: 13px; margin: 0 0 10px 0;">
           ⚙️ Скрыто от клиентов. Добавлен: {{ product.created_at|date:"d.m.Y" }}
@@ -23,13 +23,10 @@
             ✏️ Редактировать товар
           </a>
 
-          <!-- Новая форма безопасного удаления БАДа из урока -->
-          <form method="POST" action="{% url 'products:product_remove' product_id=product.id %}" onsubmit="return confirm('Вы уверены, что хотите навсегда удалить этот БАД из каталога?');" style="margin: 0;">
-            {% csrf_token %}
-            <button type="submit" style="background-color: #c62828; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 13px; font-weight: bold; cursor: pointer;">
-              🗑️ Удалить товар
-            </button>
-          </form>
+          <!-- Ссылка удаления из урока, оформленная как кнопка -->
+          <a href="{% url 'products:product_remove' product_id=product.id %}" style="display: inline-block; background-color: #c62828; color: white; text-decoration: none; padding: 6px 12px; border-radius: 4px; font-size: 13px; font-weight: bold;">
+            🗑️ Удалить товар
+          </a>
         </div>
       </div>
     {% endif %}

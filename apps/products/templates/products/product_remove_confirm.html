@@ -1,0 +1,29 @@
+{% extends "products/base.html" %}
+
+{% block page_title %}
+  iБАД | Подтверждение удаления товара
+{% endblock page_title %}
+
+{% block page_content %}
+  <div style="max-width: 500px; margin-top: 20px; border: 2px solid #c62828; padding: 25px; border-radius: 12px; background-color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+    <h1 style="color: #c62828; margin-top: 0; font-size: 24px;">Предупреждение</h1>
+    <p style="font-size: 16px; color: #333; line-height: 1.5;">
+      Вы уверены, что хотите навсегда удалить товар <strong>"{{ product.title }}"</strong> из каталога магазина? Это действие нельзя будет отменить.
+    </p>
+    
+    <div style="display: flex; gap: 15px; align-items: center; margin-top: 25px;">
+      <!-- Форма подтверждения с POST-запросом -->
+      <form method="POST" style="margin: 0;">
+        {% csrf_token %}
+        <button type="submit" style="background-color: #c62828; color: white; border: none; padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 14px;">
+          Да, удалить окончательно
+        </button>
+      </form>
+      
+      <!-- Ссылка отмены, ведущая назад к карточке товара -->
+      <a href="{% url 'products:product_detail' product_id=product.id %}" style="color: #2e7d32; text-decoration: none; font-weight: bold; font-size: 14px;">
+        Отмена
+      </a>
+    </div>
+  </div>
+{% endblock page_content %}
