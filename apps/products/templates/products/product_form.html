@@ -1,14 +1,12 @@
 {% extends "products/base.html" %}
 
 {% block page_title %}
-  iБАД | Редактировать товар
+  iБАД | {{ title }}
 {% endblock page_title %}
 
 {% block page_content %}
-  <a href="{% url 'products:product_detail' product_id=form.instance.id %}" style="color: #2e7d32; text-decoration: none; font-weight: bold;">&larr; Назад к товару</a>
-
   <div style="max-width: 500px; margin-top: 20px; border: 1px solid #e0e0e0; padding: 25px; border-radius: 8px; background-color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-    <h1 style="color: #2e7d32; margin-bottom: 20px; font-size: 24px;">Редактирование БАДа</h1>
+    <h1 style="color: #2e7d32; margin-bottom: 20px; font-size: 24px;">{{ h1 }}</h1>
     
     <form method="POST" novalidate>
       {% csrf_token %}
@@ -28,7 +26,7 @@
       {% endfor %}
       
       <button type="submit" style="background-color: #2e7d32; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px;">
-        Сохранить изменения
+        {{ submit_button_text }}
       </button>
     </form>
   </div>
