@@ -8,22 +8,38 @@
   <div style="max-width: 500px; margin-top: 20px; border: 1px solid #e0e0e0; padding: 25px; border-radius: 8px; background-color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
     <h1 style="color: #2e7d32; margin-bottom: 20px; font-size: 24px;">Добавление БАДа в каталог</h1>
     
-    <form method="POST">
+    <!-- Добавлен атрибут novalidate для отключения браузерных подсказок -->
+    <form method="POST" novalidate>
       {% csrf_token %} <!-- Защита от CSRF-атак -->
       
       <div style="margin-bottom: 15px;">
         <label for="titleInput" style="display: block; font-weight: bold; margin-bottom: 5px;">Название товара:</label>
-        <input id="titleInput" name="title" type="text" placeholder="Например: Витамин С 1000мг" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <!-- Подставлена переменная {{ title }} для сохранения ввода и удален атрибут required -->
+        <input id="titleInput" name="title" type="text" value="{{ title }}" placeholder="Например: Витамин С 1000мг" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <!-- Вывод ошибки для названия -->
+        {% if errors.title %}
+          <div style="color: #c62828; font-size: 12px; margin-top: 5px;">⚠️ {{ errors.title }}</div>
+        {% endif %}
       </div>
       
       <div style="margin-bottom: 15px;">
         <label for="priceInput" style="display: block; font-weight: bold; margin-bottom: 5px;">Цена (руб):</label>
-        <input id="priceInput" name="price" type="number" step="0.01" placeholder="0.00" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <!-- Подставлена переменная {{ price }} для сохранения ввода и удален атрибут required -->
+        <input id="priceInput" name="price" type="number" step="0.01" value="{{ price }}" placeholder="0.00" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <!-- Вывод ошибки для цены -->
+        {% if errors.price %}
+          <div style="color: #c62828; font-size: 12px; margin-top: 5px;">⚠️ {{ errors.price }}</div>
+        {% endif %}
       </div>
 
       <div style="margin-bottom: 20px;">
         <label for="descriptionInput" style="display: block; font-weight: bold; margin-bottom: 5px;">Описание и состав:</label>
-        <textarea id="descriptionInput" name="description" rows="4" placeholder="Укажите дозировку, количество капсул и правила приема..." required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;"></textarea>
+        <!-- Подставлена переменная {{ description }} внутрь тега textarea и удален атрибут required -->
+        <textarea id="descriptionInput" name="description" rows="4" placeholder="Укажите дозировку, количество капсул и правила приема..." style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">{{ description }}</textarea>
+        <!-- Вывод ошибки для описания -->
+        {% if errors.description %}
+          <div style="color: #c62828; font-size: 12px; margin-top: 5px;">⚠️ {{ errors.description }}</div>
+        {% endif %}
       </div>
       
       <button type="submit" style="background-color: #2e7d32; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%;">
