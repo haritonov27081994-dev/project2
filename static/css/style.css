@@ -469,3 +469,52 @@ main {
   color: #c62828;
   border: 1px solid #ef9a9a;
 }
+
+/* Панель фильтрации по категориям и блок производителя */
+.category-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+  margin-bottom: 10px;
+}
+
+.category-pill {
+  display: inline-block;
+  padding: 7px 15px;
+  border-radius: 20px;
+  border: 1px solid #2e7d32;
+  color: #2e7d32;
+  background-color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.category-pill:hover,
+.category-pill.active {
+  background-color: #2e7d32;
+  color: #ffffff;
+}
+
+.category-tag {
+  display: inline-block;
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.manufacturer-box {
+  background-color: #f1f8e9;
+  border-left: 4px solid #2e7d32;
+  padding: 10px 14px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #333;
+}

@@ -10,11 +10,27 @@
       <img src="{{ product.image.url }}" alt="{{ product.title }}" class="detail-img">
     {% endif %}
 
+    {% if product.category %}
+      <a href="{% url 'products:product_list_by_category' category_slug=product.category.slug %}" class="category-tag" style="text-decoration: none;">
+        {{ product.category.name }}
+      </a>
+    {% endif %}
+
     <h1>{{ product.title }}</h1>
     <p class="detail-meta">
       <strong>ID товара:</strong> {{ product.id }} |
       <strong>Продавец:</strong> {{ product.seller.username|default:"Администрация iБАД" }}
     </p>
+
+    {% if product.manufacturer %}
+      <div class="manufacturer-box">
+        <strong>Производитель:</strong> {{ product.manufacturer.name }} ({{ product.manufacturer.country }})
+        {% if product.manufacturer.website %}
+          &nbsp;|&nbsp; <a href="{{ product.manufacturer.website }}" target="_blank" rel="noopener" style="color: #2e7d32;">Официальный сайт &nearr;</a>
+        {% endif %}
+      </div>
+    {% endif %}
+
     <p class="detail-description"><strong>Описание и состав:</strong> {{ product.description }}</p>
 
     {% if user.is_authenticated and user == product.seller or user.is_staff %}

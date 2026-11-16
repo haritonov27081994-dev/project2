@@ -5,7 +5,7 @@ from .models import Product
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['title', 'price', 'image', 'description']
+        fields = ['title', 'category', 'manufacturer', 'price', 'image', 'description']
 
         widgets = {
             'title': forms.TextInput(attrs={
@@ -26,6 +26,8 @@ class ProductForm(forms.ModelForm):
 
         labels = {
             'title': 'Название товара',
+            'category': 'Категория',
+            'manufacturer': 'Производитель',
             'price': 'Цена (руб)',
             'image': 'Фотография товара',
             'description': 'Описание и состав'

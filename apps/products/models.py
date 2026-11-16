@@ -2,6 +2,34 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True, verbose_name="Название категории")
+    slug = models.SlugField(max_length=120, unique=True, verbose_name="URL-метка (slug)")
+
+    class Meta:
+        verbose_name = 'категория'
+        verbose_name_plural = 'категории'
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
+class Manufacturer(models.Model):
+    name = models.CharField(max_length=150, verbose_name="Название")
+    country = models.CharField(max_length=100, verbose_name="Страна")
+    website = models.URLField(blank=True, null=True, verbose_name="Сайт")
+    description = models.TextField(blank=True, verbose_name="Описание")
+
+    class Meta:
+        verbose_name = 'производитель'
+        verbose_name_plural = 'производители'
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
     STATUS_CHOICES = [
         ('pending', 'На проверке'),
@@ -14,6 +42,22 @@ class Product(models.Model):
         on_delete=models.CASCADE,
         related_name='products',
         verbose_name="Продавец",
+        null=True,
+        blank=True
+    )
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        related_name='products',
+        verbose_name="Категория",
+        null=True,
+        blank=True
+    )
+    manufacturer = models.ForeignKey(
+        Manufacturer,
+        on_delete=models.SET_NULL,
+        related_name='products',
+        verbose_name="Производитель",
         null=True,
         blank=True
     )
