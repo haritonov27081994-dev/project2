@@ -1,43 +1,35 @@
 {% extends "products/base.html" %}
 
-{% block page_title %}
-  iБАД | {{ product.title }}
-{% endblock page_title %}
+{% block page_title %}iБАД | {{ product.title }}{% endblock page_title %}
 
 {% block page_content %}
-  <a href="javascript:history.back()" style="color: #2e7d32; text-decoration: none; font-weight: bold;">&larr; Назад к каталогу</a>
+  <a href="{% url 'products:product_list' %}" style="color: #2e7d32; text-decoration: none; font-weight: bold;">&larr; Назад к каталогу</a>
 
-  <div style="border: 2px solid #2e7d32; border-radius: 12px; padding: 25px; margin-top: 20px; max-width: 600px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-    <h1 style="color: #2e7d32; margin-top: 0;">{{ product.title }}</h1>
-    <p style="color: #777;"><strong>ID товара:</strong> {{ product.id }}</p>
-    <p><strong>Описание и состав:</strong> {{ product.description }}</p>
-{% if user.is_staff %}
-      <div style="background-color: #ffebee; padding: 12px; border-radius: 6px; margin-top: 10px;">
-        <p style="color: #c62828; font-size: 13px; margin: 0 0 10px 0;">
-          ⚙️ Скрыто от клиентов. Добавлен: {{ product.created_at|date:"d.m.Y" }}
+  <div class="detail-card">
+    {% if product.image %}
+      <img src="{{ product.image.url }}" alt="{{ product.title }}" class="detail-img">
+    {% endif %}
+
+    <h1>{{ product.title }}</h1>
+    <p class="detail-meta">
+      <strong>ID товара:</strong> {{ product.id }} |
+      <strong>Продавец:</strong> {{ product.seller.username|default:"Администрация iБАД" }}
+    </p>
+    <p class="detail-description"><strong>Описание и состав:</strong> {{ product.description }}</p>
+
+    {% if user.is_authenticated and user == product.seller or user.is_staff %}
+      <div class="owner-panel">
+        <p>
+          ⚙️ Статус: <strong>{{ product.get_status_display }}</strong> | Добавлен: {{ product.created_at|date:"d.m.Y" }}
         </p>
-        
         <div style="display: flex; gap: 10px; align-items: center;">
-          <!-- Кнопка редактирования -->
-          <a href="{% url 'products:product_edit' product_id=product.id %}" style="display: inline-block; background-color: #1b5e20; color: white; text-decoration: none; padding: 6px 12px; border-radius: 4px; font-size: 13px; font-weight: bold;">
-            ✏️ Редактировать товар
-          </a>
-
-          <!-- Ссылка удаления из урока, оформленная как кнопка -->
-          <a href="{% url 'products:product_remove' product_id=product.id %}" style="display: inline-block; background-color: #c62828; color: white; text-decoration: none; padding: 6px 12px; border-radius: 4px; font-size: 13px; font-weight: bold;">
-            🗑️ Удалить товар
-          </a>
+          <a href="{% url 'products:product_edit' product_id=product.id %}" class="btn-sm-edit">✏️ Редактировать товар</a>
+          <a href="{% url 'products:product_remove' product_id=product.id %}" class="btn-sm-delete">🗑️ Удалить товар</a>
         </div>
       </div>
     {% endif %}
 
-    
-    <div style="font-size: 24px; color: #2e7d32; font-weight: bold; margin-top: 15px;">
-      Цена: {{ product.price }} руб.
-    </div>
-    
-    <button style="background-color: #2e7d32; color: white; border: none; padding: 12px 25px; border-radius: 5px; cursor: pointer; margin-top: 20px; font-weight: bold; font-size: 16px;">
-      Добавить в корзину
-    </button>
+    <div class="detail-price">Цена: {{ product.price }} руб.</div>
+    <button class="btn-primary">Добавить в корзину</button>
   </div>
 {% endblock page_content %}

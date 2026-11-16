@@ -13,8 +13,8 @@ def register_view(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)  # Сразу авторизуем пользователя после регистрации
-            return redirect('users:profile')  # Перекидываем в профиль
+            login(request, user)
+            return redirect('users:profile')
     else:
         form = UserRegisterForm()
 
@@ -23,6 +23,5 @@ def register_view(request):
 
 @login_required
 def profile_view(request):
-    # Получаем все товары, привязанные к текущему пользователю
-    user_products = Product.objects.filter(author=request.user).order_by('-created_at')
+    user_products = Product.objects.filter(seller=request.user).order_by('-created_at')
     return render(request, 'users/profile.html', {'user_products': user_products})

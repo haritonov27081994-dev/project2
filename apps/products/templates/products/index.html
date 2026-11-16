@@ -1,13 +1,9 @@
 {% extends "products/base.html" %}
 
-{% block page_title %}
-  iБАД | Главная страница
-{% endblock page_title %}
+{% block page_title %}iБАД | Главная страница{% endblock page_title %}
 
 {% block page_content %}
-  <h1>Добро пожаловать в интернет-магазин БАДов!</h1>
-  <p>Мы заботимся о вашем здоровье. Выберите качественные витамины и добавки в нашем удобном каталоге.</p>
-  <a href="{% url 'products:product_list' %}" style="display: inline-block; background-color: #2e7d32; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 10px; font-weight: bold;">
-    Перейти к покупкам &rarr;
-  </a>
+  <h1 style="margin-bottom: 12px; color: #2e7d32;">Добро пожаловать в интернет-магазин БАДов!</h1>
+  <p style="margin-bottom: 20px; line-height: 1.5;">Мы заботимся о вашем здоровье. Выберите качественные витамины и добавки в нашем удобном каталоге.</p>
+  <a href="{% url 'products:product_list' %}" class="btn-primary">Перейти к покупкам &rarr;</a>
 {% endblock page_content %}

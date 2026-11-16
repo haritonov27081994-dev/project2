@@ -81,3 +81,11 @@ MAILERS = {
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = '/users/profile/'
 LOGOUT_REDIRECT_URL = 'products:home'
+
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / 'static/']
+
+# Media files (Загружаемые пользователем картинки товаров)
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
