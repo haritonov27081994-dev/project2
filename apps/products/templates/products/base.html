@@ -4,28 +4,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Блок для динамической замены заголовка вкладки на разных страницах -->
   <title>{% block page_title %}{% endblock page_title %}</title>
-  
   <link rel="icon" href="{% static 'images/favicon.png' %}">
-  
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body style="margin: 0; padding: 0;">
 
-  <!-- Общая шапка интернет-магазина -->
   <header style="background-color: #2e7d32; padding: 15px 20px; color: white;">
-    <nav style="display: flex; gap: 20px; align-items: center;">
-      <strong style="font-size: 20px; margin-right: 20px;">iБАД</strong>
-      <a href="{% url 'products:home' %}" style="color: white; text-decoration: none; font-weight: bold;">Главная</a>
-      <a href="{% url 'products:product_list' %}" style="color: white; text-decoration: none; font-weight: bold;">Каталог БАДов</a>
-      
-      {% if user.is_authenticated and user.is_staff %}
-        <a href="{% url 'products:product_add' %}" style="color: #a5d6a7; text-decoration: none; font-weight: bold; border: 1px solid #a5d6a7; padding: 5px 10px; border-radius: 4px;">+ Добавить товар</a>
-      {% endif %}
+    <nav style="display: flex; gap: 20px; align-items: center; justify-content: space-between;">
+      <div style="display: flex; gap: 20px; align-items: center;">
+        <strong style="font-size: 20px; margin-right: 20px;">iБАД</strong>
+        <a href="{% url 'products:home' %}" style="color: white; text-decoration: none; font-weight: bold;">Главная</a>
+        <a href="{% url 'products:product_list' %}" style="color: white; text-decoration: none; font-weight: bold;">Каталог БАДов</a>
+        
+        {% if user.is_authenticated %}
+          <a href="{% url 'products:product_add' %}" style="color: #a5d6a7; text-decoration: none; font-weight: bold; border: 1px solid #a5d6a7; padding: 5px 10px; border-radius: 4px;">+ Добавить товар</a>
+        {% endif %}
+      </div>
+
+      <div style="display: flex; gap: 15px; align-items: center;">
+        {% if user.is_authenticated %}
+          <a href="{% url 'users:profile' %}" style="color: white; text-decoration: none; font-weight: bold;">Профиль ({{ user.username }})</a>
+          <form action="{% url 'users:logout' %}" method="post" style="margin: 0;">
+            {% csrf_token %}
+            <button type="submit" style="background: transparent; border: 1px solid white; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">Выйти</button>
+          </form>
+        {% else %}
+          <a href="{% url 'users:login' %}" style="color: white; text-decoration: none; font-weight: bold;">Войти</a>
+          <a href="{% url 'users:register' %}" style="background-color: white; color: #2e7d32; text-decoration: none; font-weight: bold; padding: 5px 12px; border-radius: 4px;">Регистрация</a>
+        {% endif %}
+      </div>
     </nav>
   </header>
-
 
   <main style="padding: 20px;">
     {% block page_content %}{% endblock page_content %}

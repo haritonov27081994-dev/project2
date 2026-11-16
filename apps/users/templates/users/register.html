@@ -1,0 +1,17 @@
+{% extends 'products/base.html' %}
+
+{% block page_title %}Регистрация — iБАД{% endblock page_title %}
+
+{% block page_content %}
+<div style="max-width: 450px; margin: 30px auto; padding: 25px; border: 1px solid #ddd; border-radius: 8px; background: #fff;">
+  <h1 style="color: #2e7d32; margin-top: 0;">Регистрация</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" style="background-color: #2e7d32; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%;">Зарегистрироваться</button>
+  </form>
+  <p style="margin-top: 15px; text-align: center;">
+    Уже есть аккаунт? <a href="{% url 'users:login' %}" style="color: #2e7d32;">Войти</a>
+  </p>
+</div>
+{% endblock page_content %}
