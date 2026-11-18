@@ -17,7 +17,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'apps.products',
-    'apps.users',  # <-- Подключили новое приложение пользователей
+    'apps.users',
+    'apps.cart',
 ]
 
 MIDDLEWARE = [
@@ -42,6 +43,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'apps.cart.context_processors.cart_counter'
             ],
         },
     },

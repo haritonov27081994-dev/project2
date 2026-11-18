@@ -647,3 +647,68 @@ main {
   color: #b71c1c;
   border-color: #e57373;
 }
+
+.cart-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #1b5e20;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid #a5d6a7;
+  transition: background-color 0.2s;
+}
+
+.cart-nav-btn:hover {
+  background-color: #144a18;
+}
+
+.cart-badge {
+  display: inline-block;
+  background-color: #ffffff;
+  color: #2e7d32;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 12px;
+  transition: transform 0.25s ease;
+}
+
+.cart-badge.bump {
+  transform: scale(1.35);
+}
+
+/* Элементы управления на странице корзины */
+.qty-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #2e7d32;
+  background-color: #ffffff;
+  color: #2e7d32;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.qty-btn:hover {
+  background-color: #2e7d32;
+  color: #ffffff;
+}
+
+.cart-summary {
+  margin-top: 25px;
+  padding: 22px 25px;
+  background-color: #f9fbe7;
+  border: 1px solid #dcedc8;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}

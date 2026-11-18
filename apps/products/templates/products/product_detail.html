@@ -1,55 +1,9 @@
-{% extends "products/base.html" %}
-
-{% block page_title %}iБАД | {{ product.title }}{% endblock page_title %}
-
-{% block page_content %}
-  <a href="{% url 'products:product_list' %}" style="color: #2e7d32; text-decoration: none; font-weight: bold;">&larr; Назад к каталогу</a>
-
-  <div class="detail-card">
-    {% if product.image %}
-      <img src="{{ product.image.url }}" alt="{{ product.title }}" class="detail-img">
-    {% endif %}
-
-    {% if product.category %}
-      <a href="{% url 'products:product_list_by_category' category_slug=product.category.slug %}" class="category-tag" style="text-decoration: none;">
-        {{ product.category.name }}
-      </a>
-    {% endif %}
-
-    <h1>{{ product.title }}</h1>
-    <p class="detail-meta">
-      <strong>ID:</strong> {{ product.id }} |
-      <strong>Продавец:</strong> {{ product.seller.username|default:"Администрация iБАД" }} |
-      <strong>Просмотров:</strong> {{ product.viewed_by_users.count }}
-    </p>
-
-    {% if product.manufacturer %}
-      <div class="manufacturer-box">
-        <strong>Производитель:</strong> {{ product.manufacturer.name }} ({{ product.manufacturer.country }})
-        {% if product.manufacturer.website %}
-          &nbsp;|&nbsp; <a href="{{ product.manufacturer.website }}" target="_blank" rel="noopener" style="color: #2e7d32;">Официальный сайт &nearr;</a>
-        {% endif %}
-      </div>
-    {% endif %}
-
-    <p class="detail-description"><strong>Описание и состав:</strong> {{ product.description }}</p>
-
-    {% if user.is_authenticated and user == product.seller or user.is_staff %}
-      <div class="owner-panel">
-        <p>
-          ⚙️ Статус: <strong>{{ product.get_status_display }}</strong> | Добавлен: {{ product.created_at|date:"d.m.Y" }}
-        </p>
-        <div style="display: flex; gap: 10px; align-items: center;">
-          <a href="{% url 'products:product_edit' product_id=product.id %}" class="btn-sm-edit">✏️ Редактировать товар</a>
-          <a href="{% url 'products:product_remove' product_id=product.id %}" class="btn-sm-delete">🗑️ Удалить товар</a>
-        </div>
-      </div>
-    {% endif %}
-
-    <div class="detail-price">Цена: {{ product.price }} руб.</div>
-
     <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-      <button class="btn-primary">Добавить в корзину</button>
+      <button type="button"
+              class="btn-primary js-add-to-cart"
+              data-url="{% url 'cart:cart_add' product_id=product.id %}">
+        🛒 Добавить в корзину
+      </button>
 
       {% if user.is_authenticated %}
         <form action="{% url 'products:toggle_favorite' product_id=product.id %}" method="post" style="margin: 0;">
@@ -70,5 +24,3 @@
         </a>
       {% endif %}
     </div>
-  </div>
-{% endblock page_content %}
