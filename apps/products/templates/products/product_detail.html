@@ -47,6 +47,28 @@
     {% endif %}
 
     <div class="detail-price">Цена: {{ product.price }} руб.</div>
-    <button class="btn-primary">Добавить в корзину</button>
+
+    <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+      <button class="btn-primary">Добавить в корзину</button>
+
+      {% if user.is_authenticated %}
+        <form action="{% url 'products:toggle_favorite' product_id=product.id %}" method="post" style="margin: 0;">
+          {% csrf_token %}
+          {% if user in product.favorited_by.all %}
+            <button type="submit" class="btn-fav btn-fav-active" style="padding: 10px 18px; font-size: 15px;">
+              ❤️ В избранном ({{ product.favorited_by.count }})
+            </button>
+          {% else %}
+            <button type="submit" class="btn-fav" style="padding: 10px 18px; font-size: 15px;">
+              🤍 Добавить в избранное ({{ product.favorited_by.count }})
+            </button>
+          {% endif %}
+        </form>
+      {% else %}
+        <a href="{% url 'users:login' %}" class="btn-fav" style="padding: 10px 18px; font-size: 15px; text-decoration: none;">
+          🤍 Войдите, чтобы добавить в избранное
+        </a>
+      {% endif %}
+    </div>
   </div>
 {% endblock page_content %}

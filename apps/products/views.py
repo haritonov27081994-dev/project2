@@ -1,7 +1,9 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib import messages
 from .models import Category, Product
 from .forms import ProductForm
 
@@ -14,7 +16,7 @@ class ProductListView(ListView):
     model = Product
     template_name = 'products/product_list.html'
     context_object_name = 'products'
-    paginate_by = 6  # Пагинация: по 6 товаров на одной странице
+    paginate_by = 6
 
     def get_queryset(self):
         queryset = Product.objects.filter(status='published').order_by('-created_at')
@@ -48,7 +50,6 @@ class ProductDetailView(UserPassesTestMixin, DetailView):
 
     def get_object(self, queryset=None):
         product = super().get_object(queryset)
-        # Если пользователь вошел в аккаунт — записываем его в список просмотревших
         if self.request.user.is_authenticated:
             product.viewed_by_users.add(self.request.user)
         return product
@@ -70,11 +71,11 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.seller = self.request.user
         form.instance.status = 'pending'
+        messages.success(self.request, "Товар успешно добавлен и отправлен на проверку!")
         return super().form_valid(form)
 
 
 class SellerOrStaffMixin(LoginRequiredMixin, UserPassesTestMixin):
-    """Миксин проверки прав: редактировать и удалять может только продавец товара или админ."""
     def test_func(self):
         product = self.get_object()
         return product.seller == self.request.user or self.request.user.is_staff
@@ -96,6 +97,7 @@ class ProductUpdateView(SellerOrStaffMixin, UpdateView):
     def form_valid(self, form):
         if not self.request.user.is_staff:
             form.instance.status = 'pending'
+        messages.success(self.request, "Изменения товара успешно сохранены!")
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -108,3 +110,26 @@ class ProductDeleteView(SellerOrStaffMixin, DeleteView):
     context_object_name = 'product'
     pk_url_kwarg = 'product_id'
     success_url = reverse_lazy('users:profile')
+
+    def form_valid(self, form):
+        messages.success(self.request, f'Товар «{self.object.title}» удален.')
+        return super().form_valid(form)
+
+
+class ToggleFavoriteView(LoginRequiredMixin, View):
+    """Добавление или удаление товара из избранного с выводом messages.success."""
+    def post(self, request, product_id):
+        product = get_object_or_404(Product, id=product_id)
+
+        if request.user in product.favorited_by.all():
+            product.favorited_by.remove(request.user)
+            messages.info(request, f'Товар «{product.title}» удален из избранного.')
+        else:
+            product.favorited_by.add(request.user)
+            messages.success(request, f'Товар «{product.title}» успешно добавлен в избранное!')
+
+        # Возвращаем пользователя на ту же страницу, где он нажал кнопку
+        next_url = request.META.get('HTTP_REFERER')
+        if next_url:
+            return redirect(next_url)
+        return redirect('products:product_detail', product_id=product.id)

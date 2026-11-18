@@ -11,4 +11,5 @@ urlpatterns = [
     path('products/add/', views.ProductCreateView.as_view(), name='product_add'),
     path('products/<int:product_id>/edit/', views.ProductUpdateView.as_view(), name='product_edit'),
     path('products/<int:product_id>/remove/', views.ProductDeleteView.as_view(), name='product_remove'),
+    path('products/<int:product_id>/favorite/', views.ToggleFavoriteView.as_view(), name='toggle_favorite'),
 ]

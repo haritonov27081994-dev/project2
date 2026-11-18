@@ -29,6 +29,6 @@ class ProfileView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['user_products'] = Product.objects.filter(seller=self.request.user).order_by('-created_at')
-        # Передаем в профиль историю просмотренных пользователем товаров
         context['viewed_products'] = self.request.user.viewed_products.filter(status='published')
+        context['favorite_products'] = self.request.user.favorite_products.filter(status='published')
         return context

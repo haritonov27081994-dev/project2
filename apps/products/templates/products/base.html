@@ -1,52 +1,60 @@
 {% load static %}
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block page_title %}{% endblock page_title %}</title>
-    <link rel="icon" href="{% static 'images/favicon.png' %}" />
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=4" />
-  </head>
-  <body>
-    <header class="site-header">
-      <nav class="navbar">
-        <div class="nav-group">
-          <span class="brand-logo">iБАД</span>
-          <a href="{% url 'products:home' %}" class="nav-link">Главная</a>
-          <a href="{% url 'products:product_list' %}" class="nav-link"
-            >Каталог БАДов</a
-          >
-          {% if user.is_authenticated %}
-          <a href="{% url 'products:product_add' %}" class="nav-link-accent"
-            >+ Добавить товар</a
-          >
-          {% endif %}
-        </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block page_title %}{% endblock page_title %}</title>
+  <link rel="icon" href="{% static 'images/favicon.png' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=5">
+</head>
+<body>
 
-        <div class="nav-group">
-          {% if user.is_authenticated %}
-          <a href="{% url 'users:profile' %}" class="nav-link"
-            >Профиль ({{ user.username }})</a
-          >
+  <header class="site-header">
+    <nav class="navbar">
+      <div class="nav-group">
+        <span class="brand-logo">iБАД</span>
+        <a href="{% url 'products:home' %}" class="nav-link">Главная</a>
+        <a href="{% url 'products:product_list' %}" class="nav-link">Каталог БАДов</a>
+        {% if user.is_authenticated %}
+          <a href="{% url 'products:product_add' %}" class="nav-link-accent">+ Добавить товар</a>
+        {% endif %}
+      </div>
+
+      <div class="nav-group">
+        {% if user.is_authenticated %}
+          <a href="{% url 'users:profile' %}" class="nav-link">Профиль ({{ user.username }})</a>
           <form action="{% url 'users:logout' %}" method="post">
             {% csrf_token %}
             <button type="submit" class="btn-logout">Выйти</button>
           </form>
-          {% else %}
+        {% else %}
           <a href="{% url 'users:login' %}" class="nav-link">Войти</a>
-          <a href="{% url 'users:register' %}" class="nav-link-light"
-            >Регистрация</a
-          >
-          {% endif %}
-        </div>
-      </nav>
-    </header>
+          <a href="{% url 'users:register' %}" class="nav-link-light">Регистрация</a>
+        {% endif %}
+      </div>
+    </nav>
+  </header>
 
-    <main>{% block page_content %}{% endblock page_content %}</main>
+  <main>
+    <!-- Блок вывода уведомлений (messages.success / messages.info и др.) -->
+    {% if messages %}
+      <div class="messages-container">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags|default:'info' }}">
+            <span>{{ message }}</span>
+            <button type="button" class="alert-close" onclick="this.parentElement.remove();">&times;</button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
 
-    <footer class="site-footer">
-      <p>&copy; 2026 iБАД — Интернет-магазин биологически активных добавок.</p>
-    </footer>
-  </body>
+    {% block page_content %}{% endblock page_content %}
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 iБАД — Интернет-магазин биологически активных добавок.</p>
+  </footer>
+
+</body>
 </html>

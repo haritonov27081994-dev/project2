@@ -11,6 +11,37 @@
       <p><strong>Дата регистрации:</strong> {{ user.date_joined|date:"d.m.Y H:i" }}</p>
     </div>
 
+    <!-- Раздел избранных товаров -->
+    <div style="margin-bottom: 40px;">
+      <h2 style="margin-bottom: 15px;">❤️ Избранные товары ({{ favorite_products.count }})</h2>
+      {% if favorite_products %}
+        {% for item in favorite_products %}
+          <div class="profile-product-item">
+            <div style="display: flex; align-items: center; gap: 15px;">
+              {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.title }}" style="width: 55px; height: 55px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd;">
+              {% else %}
+                <div style="width: 55px; height: 55px; background: #eee; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #777;">Нет фото</div>
+              {% endif %}
+
+              <div>
+                <a href="{% url 'products:product_detail' item.id %}" style="font-size: 17px; font-weight: bold; color: #2e7d32; text-decoration: none;">{{ item.title }}</a>
+                <p style="margin-top: 4px; color: #555;">Цена: <strong>{{ item.price }} руб.</strong></p>
+              </div>
+            </div>
+
+            <form action="{% url 'products:toggle_favorite' product_id=item.id %}" method="post" style="margin: 0;">
+              {% csrf_token %}
+              <button type="submit" class="btn-fav btn-fav-active">❤️ Убрать из избранного</button>
+            </form>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p style="color: #666;">У вас пока нет избранных товаров.</p>
+      {% endif %}
+    </div>
+
+    <!-- Раздел товаров продавца -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
       <h2>Мои товары ({{ user_products.count }})</h2>
       <a href="{% url 'products:product_add' %}" class="btn-primary">+ Добавить БАД</a>

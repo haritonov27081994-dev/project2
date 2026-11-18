@@ -569,3 +569,81 @@ main {
 .viewed-chip:hover {
   background-color: #e8f5e9;
 }
+
+/* Уведомления (Django messages / alerts) */
+.messages-container {
+  max-width: 800px;
+  margin: 0 auto 20px auto;
+}
+
+.alert {
+  padding: 14px 18px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.alert-success {
+  background-color: #e8f5e9;
+  color: #1b5e20;
+  border: 1px solid #81c784;
+}
+
+.alert-info {
+  background-color: #e3f2fd;
+  color: #0d47a1;
+  border: 1px solid #90caf9;
+}
+
+.alert-warning {
+  background-color: #fff8e1;
+  color: #f57f17;
+  border: 1px solid #ffe082;
+}
+
+.alert-error {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+}
+
+.alert-close {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  color: inherit;
+  margin-left: 15px;
+}
+
+/* Кнопки избранного */
+.btn-fav {
+  display: inline-block;
+  background-color: #ffffff;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+  padding: 7px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 13px;
+  font-family: inherit;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.btn-fav:hover {
+  background-color: #ffebee;
+}
+
+.btn-fav-active {
+  background-color: #ffebee;
+  color: #b71c1c;
+  border-color: #e57373;
+}
