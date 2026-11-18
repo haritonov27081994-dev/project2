@@ -61,6 +61,12 @@ class Product(models.Model):
         null=True,
         blank=True
     )
+    viewed_by_users = models.ManyToManyField(
+        User,
+        related_name='viewed_products',
+        blank=True,
+        verbose_name="Просмотрено пользователями"
+    )
     title = models.CharField(max_length=200, verbose_name="Название товара")
     description = models.TextField(verbose_name="Описание товара")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")

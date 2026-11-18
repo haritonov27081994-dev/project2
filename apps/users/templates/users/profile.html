@@ -5,7 +5,7 @@
 {% block page_content %}
   <div class="profile-container">
     <div class="profile-info-card">
-      <h1>Личный кабинет продавца</h1>
+      <h1>Личный кабинет</h1>
       <p><strong>Логин:</strong> {{ user.username }}</p>
       <p><strong>Email:</strong> {{ user.email|default:"Не указан" }}</p>
       <p><strong>Дата регистрации:</strong> {{ user.date_joined|date:"d.m.Y H:i" }}</p>
@@ -44,5 +44,21 @@
     {% else %}
       <p style="color: #666;">Вы еще не добавили ни одного товара.</p>
     {% endif %}
+
+    <!-- Раздел просмотренных пользователем товаров -->
+    <div style="margin-top: 40px;">
+      <h2 style="margin-bottom: 15px;">Просмотренные мной товары ({{ viewed_products.count }})</h2>
+      {% if viewed_products %}
+        <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+          {% for item in viewed_products %}
+            <a href="{% url 'products:product_detail' item.id %}" class="viewed-chip">
+              {{ item.title }} — <strong>{{ item.price }} руб.</strong>
+            </a>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p style="color: #666;">Вы пока не просматривали карточки товаров.</p>
+      {% endif %}
+    </div>
   </div>
 {% endblock page_content %}

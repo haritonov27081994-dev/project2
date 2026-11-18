@@ -1,99 +1,110 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponseForbidden
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Category, Product
 from .forms import ProductForm
 
 
-def home_page_view(request):
-    return render(request, template_name='products/index.html')
+class HomePageView(TemplateView):
+    template_name = 'products/index.html'
 
 
-def product_list_view(request, category_slug=None):
-    categories = Category.objects.all()
-    current_category = None
-    products = Product.objects.filter(status='published').order_by('-created_at')
+class ProductListView(ListView):
+    model = Product
+    template_name = 'products/product_list.html'
+    context_object_name = 'products'
+    paginate_by = 6  # Пагинация: по 6 товаров на одной странице
 
-    if category_slug:
-        current_category = get_object_or_404(Category, slug=category_slug)
-        products = products.filter(category=current_category)
+    def get_queryset(self):
+        queryset = Product.objects.filter(status='published').order_by('-created_at')
+        category_slug = self.kwargs.get('category_slug')
+        if category_slug:
+            self.current_category = get_object_or_404(Category, slug=category_slug)
+            queryset = queryset.filter(category=self.current_category)
+        else:
+            self.current_category = None
+        return queryset
 
-    context = {
-        'products': products,
-        'categories': categories,
-        'current_category': current_category,
-    }
-    return render(request, template_name='products/product_list.html', context=context)
-
-
-def product_detail_view(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-
-    if product.status != 'published':
-        if not request.user.is_authenticated or (product.seller != request.user and not request.user.is_staff):
-            return HttpResponseForbidden("<h1>Товар недоступен</h1><p>Этот товар находится на проверке или отклонен модератором.</p>")
-
-    return render(request, 'products/product_detail.html', {'product': product})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        context['current_category'] = getattr(self, 'current_category', None)
+        return context
 
 
-@login_required
-def product_add_view(request):
-    extra_context = {
-        "title": "Добавить новый товар",
-        "h1": "Добавление БАДа в каталог",
-        "submit_button_text": "Отправить на проверку",
-    }
+class ProductDetailView(UserPassesTestMixin, DetailView):
+    model = Product
+    template_name = 'products/product_detail.html'
+    context_object_name = 'product'
+    pk_url_kwarg = 'product_id'
 
-    if request.method == "POST":
-        form = ProductForm(request.POST, request.FILES)
-        if form.is_valid():
-            new_product = form.save(commit=False)
-            new_product.seller = request.user
-            new_product.status = 'pending'
-            new_product.save()
-            return redirect('users:profile')
-    else:
-        form = ProductForm()
+    def test_func(self):
+        product = self.get_object()
+        if product.status == 'published':
+            return True
+        user = self.request.user
+        return user.is_authenticated and (product.seller == user or user.is_staff)
 
-    return render(request, 'products/product_form.html', context={"form": form, **extra_context})
-
-
-@login_required
-def product_edit_view(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-
-    if product.seller != request.user and not request.user.is_staff:
-        return HttpResponseForbidden("<h1>Доступ запрещен</h1><p>Вы можете редактировать только свои товары.</p>")
-
-    extra_context = {
-        "title": "Редактировать товар",
-        "h1": "Редактирование БАДа",
-        "submit_button_text": "Сохранить изменения",
-    }
-
-    if request.method == "POST":
-        form = ProductForm(request.POST, request.FILES, instance=product)
-        if form.is_valid():
-            updated_product = form.save(commit=False)
-            if not request.user.is_staff:
-                updated_product.status = 'pending'
-            updated_product.save()
-            return redirect("products:product_detail", product_id=product.id)
-    else:
-        form = ProductForm(instance=product)
-
-    return render(request, 'products/product_form.html', context={"form": form, **extra_context})
+    def get_object(self, queryset=None):
+        product = super().get_object(queryset)
+        # Если пользователь вошел в аккаунт — записываем его в список просмотревших
+        if self.request.user.is_authenticated:
+            product.viewed_by_users.add(self.request.user)
+        return product
 
 
-@login_required
-def product_remove_view(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
+class ProductCreateView(LoginRequiredMixin, CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'products/product_form.html'
+    success_url = reverse_lazy('users:profile')
 
-    if product.seller != request.user and not request.user.is_staff:
-        return HttpResponseForbidden("<h1>Доступ запрещен</h1><p>Вы можете удалять только свои товары.</p>")
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Добавить новый товар"
+        context['h1'] = "Добавление БАДа в каталог"
+        context['submit_button_text'] = "Отправить на проверку"
+        return context
 
-    if request.method == "POST":
-        product.delete()
-        return redirect("users:profile")
+    def form_valid(self, form):
+        form.instance.seller = self.request.user
+        form.instance.status = 'pending'
+        return super().form_valid(form)
 
-    return render(request, 'products/product_remove_confirm.html', {'product': product})
+
+class SellerOrStaffMixin(LoginRequiredMixin, UserPassesTestMixin):
+    """Миксин проверки прав: редактировать и удалять может только продавец товара или админ."""
+    def test_func(self):
+        product = self.get_object()
+        return product.seller == self.request.user or self.request.user.is_staff
+
+
+class ProductUpdateView(SellerOrStaffMixin, UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'products/product_form.html'
+    pk_url_kwarg = 'product_id'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Редактировать товар"
+        context['h1'] = "Редактирование БАДа"
+        context['submit_button_text'] = "Сохранить изменения"
+        return context
+
+    def form_valid(self, form):
+        if not self.request.user.is_staff:
+            form.instance.status = 'pending'
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('products:product_detail', kwargs={'product_id': self.object.id})
+
+
+class ProductDeleteView(SellerOrStaffMixin, DeleteView):
+    model = Product
+    template_name = 'products/product_remove_confirm.html'
+    context_object_name = 'product'
+    pk_url_kwarg = 'product_id'
+    success_url = reverse_lazy('users:profile')

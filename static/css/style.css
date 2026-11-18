@@ -518,3 +518,54 @@ main {
   font-size: 14px;
   color: #333;
 }
+
+/* Пагинация и просмотренные товары */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 35px;
+  flex-wrap: wrap;
+}
+
+.page-link {
+  display: inline-block;
+  padding: 8px 14px;
+  border: 1px solid #2e7d32;
+  color: #2e7d32;
+  background-color: #ffffff;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.page-link:hover {
+  background-color: #2e7d32;
+  color: #ffffff;
+}
+
+.page-current {
+  font-size: 14px;
+  font-weight: bold;
+  color: #555;
+  padding: 8px 12px;
+}
+
+.viewed-chip {
+  display: inline-block;
+  padding: 8px 14px;
+  background-color: #ffffff;
+  border: 1px solid #c8e6c9;
+  border-radius: 6px;
+  color: #2e7d32;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.viewed-chip:hover {
+  background-color: #e8f5e9;
+}

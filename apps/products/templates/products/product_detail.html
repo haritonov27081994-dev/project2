@@ -18,8 +18,9 @@
 
     <h1>{{ product.title }}</h1>
     <p class="detail-meta">
-      <strong>ID товара:</strong> {{ product.id }} |
-      <strong>Продавец:</strong> {{ product.seller.username|default:"Администрация iБАД" }}
+      <strong>ID:</strong> {{ product.id }} |
+      <strong>Продавец:</strong> {{ product.seller.username|default:"Администрация iБАД" }} |
+      <strong>Просмотров:</strong> {{ product.viewed_by_users.count }}
     </p>
 
     {% if product.manufacturer %}

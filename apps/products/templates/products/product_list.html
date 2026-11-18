@@ -13,7 +13,6 @@
     {% endif %}
   </h1>
 
-  <!-- Панель фильтрации по категориям -->
   {% if categories %}
     <div class="category-bar">
       <a href="{% url 'products:product_list' %}" class="category-pill {% if not current_category %}active{% endif %}">
@@ -52,9 +51,9 @@
                 <strong>Бренд:</strong> {{ product.manufacturer.name }} ({{ product.manufacturer.country }})
               </p>
             {% endif %}
-            {% if product.seller %}
-              <p style="font-size: 12px; color: #777; margin-top: 4px;">Продавец: {{ product.seller.username }}</p>
-            {% endif %}
+            <p style="font-size: 12px; color: #777; margin-top: 4px;">
+              Продавец: {{ product.seller.username|default:"iБАД" }} | 👁 {{ product.viewed_by_users.count }}
+            </p>
           </div>
 
           <div>
@@ -63,6 +62,26 @@
         </div>
       {% endfor %}
     </div>
+
+    <!-- Блок пагинации -->
+    {% if is_paginated %}
+      <div class="pagination">
+        {% if page_obj.has_previous %}
+          <a href="?page=1" class="page-link">&laquo; Первая</a>
+          <a href="?page={{ page_obj.previous_page_number }}" class="page-link">&larr; Назад</a>
+        {% endif %}
+
+        <span class="page-current">
+          Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}" class="page-link">Вперед &rarr;</a>
+          <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link">Последняя &raquo;</a>
+        {% endif %}
+      </div>
+    {% endif %}
+
   {% else %}
     <p style="margin-top: 20px;">В этой категории пока нет опубликованных товаров.</p>
   {% endif %}
